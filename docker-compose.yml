@@ -1,0 +1,47 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:14.1-alpine
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    volumes:
+      - ./db_data/postgres:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+  mongodb:
+    image: mongo:5.0
+    restart: always
+    volumes:
+      - ./db_data/mongodb:/data/db
+    ports:
+      - "27017:27017"
+
+  aspnet:
+    build:
+      context: ./backend/aspnet
+    depends_on:
+      - postgres
+    ports:
+      - "5000:5000"
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      ConnectionStrings__DefaultConnection: "Host=postgres;Database=cinema;Username=postgres;Password=postgres"
+      ASPNETCORE_URLS: "http://*:5000"
+
+  express:
+    build:
+      context: ./backend/express
+    depends_on:
+      - mongodb
+    ports:
+      - "3000:3000"
+    environment:
+      MONGO_URI: mongodb://mongodb:27017/cinema
+
+volumes:
+  db_data:
+    driver: local

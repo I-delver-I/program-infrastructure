@@ -1,0 +1,32 @@
+# Node.js
+node_modules/
+npm-debug.log
+yarn-debug.log
+yarn-error.log
+
+# Environment variables
+.env
+.env.*
+
+# Coverage
+coverage/
+
+# Logs
+*.log
+
+# VSCode settings
+.vscode/
+
+# macOS
+.DS_Store
+
+# ASP.NET Core
+bin/
+obj/
+*.user
+*.suo
+
+# Docker
+*.pid
+docker-compose.override.yml
+db_data/
