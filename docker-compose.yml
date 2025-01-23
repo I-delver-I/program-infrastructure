@@ -41,7 +41,11 @@ services:
       - "3000:3000"
     environment:
       MONGO_URI: mongodb://mongodb:27017/cinema
+    volumes:
+      - express_images:/app/uploads
 
 volumes:
   db_data:
+    driver: local
+  express_images:
     driver: local

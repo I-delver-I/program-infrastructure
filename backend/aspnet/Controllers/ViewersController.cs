@@ -1,12 +1,70 @@
 using aspnet.Models;
+using aspnet.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 [ApiController]
 [Route("api/[controller]")]
-public class ViewersController(ApplicationDbContext context) : ControllerBase
+public class ViewersController(ApplicationDbContext context, ImageService imageService) : ControllerBase
 {
   private readonly ApplicationDbContext _context = context;
+  private readonly ImageService _imageService = imageService;
+
+  [HttpPost("{id}/upload")]
+  public async Task<IActionResult> UploadImage(int id, IFormFile file)
+  {
+    try
+    {
+      var viewer = await _imageService.UploadImageAsync(id, file);
+      return Ok(new { viewer.Id });
+    }
+    catch (Exception ex)
+    {
+      return BadRequest(ex.Message);
+    }
+  }
+
+  [HttpGet("{id}/image")]
+  public async Task<IActionResult> GetImage(int id)
+  {
+    try
+    {
+      var image = await _imageService.RetrieveImageAsync(id);
+      return File(image, "image/jpeg");
+    }
+    catch (Exception ex)
+    {
+      return NotFound(ex.Message);
+    }
+  }
+
+  [HttpDelete("{id}/image")]
+  public async Task<IActionResult> DeleteImage(int id)
+  {
+    try
+    {
+      await _imageService.DeleteImageAsync(id);
+      return Ok("Image deleted successfully.");
+    }
+    catch (Exception ex)
+    {
+      return NotFound(ex.Message);
+    }
+  }
+
+  [HttpPut("{id}/update-image")]
+  public async Task<IActionResult> UpdateImage(int id, IFormFile file)
+  {
+    try
+    {
+      var viewer = await _imageService.ReplaceImageAsync(id, file);
+      return Ok(new { viewer.Id });
+    }
+    catch (Exception ex)
+    {
+      return BadRequest(ex.Message);
+    }
+  }
 
   [HttpGet]
   public async Task<ActionResult<IEnumerable<Viewer>>> GetViewers()

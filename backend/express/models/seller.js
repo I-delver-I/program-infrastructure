@@ -6,6 +6,7 @@ const sellerSchema = new mongoose.Schema({
   gender: { type: String, required: true },
   position: { type: String },
   salary: { type: Number },
+  imagePath: { type: String },
 });
 
 module.exports = mongoose.model('Seller', sellerSchema);

@@ -35,7 +35,7 @@ const swaggerDocs = swaggerJsdoc(swaggerOptions);
 
 app.use(cors());
 app.use(bodyParser.json());
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
+app.use('/swagger', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 
 mongoose.connect(process.env.MONGO_URI || 'mongodb://localhost:27017/cinema');
 const db = mongoose.connection;
